@@ -30,10 +30,6 @@ mongoose
 
 //vwQdb1Z5NYSB9unr
 
-app.get("/test", (req, res) => {
-  res.json("test ok");
-});
-
 app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -83,5 +79,9 @@ app.get("/profile", (req, res) => {
     res.json(null);
   }
 });
+
+app.post('/logout' , (req,res) => {
+    res.cookie('token','').json(true);
+})
 
 app.listen(4000);
