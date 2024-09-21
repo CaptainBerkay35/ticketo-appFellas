@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./models/user.js");
+const axios = require("axios");
 require("dotenv").config();
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -83,5 +84,54 @@ app.get("/profile", (req, res) => {
 app.post('/logout' , (req,res) => {
     res.cookie('token','').json(true);
 })
+
+app.get("/flights", async (req, res) => {
+  try {
+    const response = await axios.get("https://api.schiphol.nl/public-flights/flights", {
+      headers: {
+        "ResourceVersion": "v4",
+        "Accept": "application/json",
+        "app_id": process.env.APP_ID, 
+        "app_key": process.env.SCHIPHOL_API, 
+      },
+    });
+    res.json(response.data); // Send the API data back to the frontend
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+app.get("/airlines", async (req, res) => {
+  try {
+    const response = await axios.get("https://api.schiphol.nl/public-flights/airlines", {
+      headers: {
+        "ResourceVersion": "v4",
+        "Accept": "application/json",
+        "app_id": process.env.APP_ID, 
+        "app_key": process.env.SCHIPHOL_API, 
+      },
+    });
+    res.json(response.data); // Send the API data back to the frontend
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+app.get("/destinations", async (req, res) => {
+  try {
+    const response = await axios.get("https://api.schiphol.nl/public-flights/destinations", {
+      headers: {
+        "ResourceVersion": "v4",
+        "Accept": "application/json",
+        "app_id": process.env.APP_ID, 
+        "app_key": process.env.SCHIPHOL_API, 
+      },
+    });
+    res.json(response.data); // Send the API data back to the frontend
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
 
 app.listen(4000);

@@ -28,7 +28,7 @@ export default function LoginPage() {
   return (
     <div className="mt-4 grow flex items-center justify-around">
       <div className="mb-32">
-        <h1 className="text-4xl text-center mb-4">Login</h1>
+        <h1 className="text-4xl text-center mb-4 font-bold">Login</h1>
         <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
           <input
             type="email"
