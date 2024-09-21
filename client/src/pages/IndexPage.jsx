@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { PlaneIcon, ArrivalIcon, DepartureIcon } from "../icon";
+import {
+  PlaneIcon,
+  ArrivalIcon,
+  DepartureIcon,
+  arrowLeft,
+  arrowRight,
+} from "../icon";
 
 const getRandomPrice = () => {
   return Math.floor(Math.random() * (500 - 50 + 1)) + 50;
@@ -10,7 +16,16 @@ export default function IndexPage() {
   const [flights, setFlights] = useState([]);
   const [destinations, setDestinations] = useState([]);
   const [error, setError] = useState(null);
-  const [tripType, setTripType] = useState("one-way"); 
+  const [tripType, setTripType] = useState("one-way");
+  const [expandedFlight, setExpandedFlight] = useState(null);
+
+  const toggleFlightDetails = (index) => {
+    if (expandedFlight === index) {
+      setExpandedFlight(null); // Collapse if already expanded
+    } else {
+      setExpandedFlight(index); // Expand the selected flight
+    }
+  };
 
   useEffect(() => {
     axios
@@ -192,9 +207,36 @@ export default function IndexPage() {
                   Book Flight
                 </button>
               </div>
-              <button className="absolute left-[0px] bottom-[-40px] py-2 px-4 border rounded-md bg-gray-300 text-md text-secondary underline text-underline  hover:bg-gray-200">
-                Check the details
-              </button>
+              <div
+                className={`transition duration-800 absolute left-[0px] bottom-[-40px] ${
+                  expandedFlight === index ? "w-full" : "w-1/4"
+                }`}
+              >
+                <button
+                  onClick={() => toggleFlightDetails(index)}
+                  className={`py-2 px-4 border rounded-md bg-gray-300 text-md text-secondary underline  w-full flex items-center gap-2 
+  ${
+    expandedFlight === index
+      ? "bg-secondary text-white rounded-tl-none rounded-tr-none no-underline"
+      : ""
+  }`}
+                >
+                  {expandedFlight === index ? (
+                    <>
+                      Collapse Details {arrowLeft()}
+                      <div className="w-0.5 h-6 bg-white "></div>
+                      <div className="flex  gap-8 ">
+                        <p>Terminal: {flight.terminal}</p>
+                        <p>Aircraft: {flight.aircraftType.iataMain}</p>
+                        <p>Visa requirement: {flight.visa ? "Yes" : "No"}</p>
+                        <p>Baggage Claim: {flight.baggageClaim.belts}</p>
+                      </div>
+                    </>
+                  ) : (
+                    <>Check the details {arrowRight()}</>
+                  )}
+                </button>
+              </div>
             </div>
           ))
         ) : (
