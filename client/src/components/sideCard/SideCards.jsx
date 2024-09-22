@@ -1,8 +1,8 @@
 import Card from "./Card";
-import hotelImage from "../assets/hotelBanner.jpeg";
-import carRental from "../assets/carRental.jpeg";
-import travelLuggage from "../assets/travelLuggage.jpeg";
-import { carIcon, hotelIcon, luggageIcon } from "../icon";
+import hotelImage from "../../assets/hotelBanner.jpeg";
+import carRental from "../../assets/carRental.jpeg";
+import travelLuggage from "../../assets/travelLuggage.jpeg";
+import { carIcon, hotelIcon, luggageIcon } from "../../icon";
 
 export default function Sidecards() {
   return (

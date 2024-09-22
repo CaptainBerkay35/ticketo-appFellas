@@ -1,9 +1,15 @@
 import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link } from "react-router-dom";
+import { useDestination } from "../contexts/DestinationContext";
 
 export default function Modal({ flight, isOpen, onClose }) {
   const { user } = useContext(UserContext); // Get user from context
+  const { destinations } = useDestination();
+
+  const destinationInfo = destinations.find(
+    (destination) => destination.iata === flight?.route.destinations[0]
+  );
 
   if (!isOpen) return null;
 
@@ -11,12 +17,11 @@ export default function Modal({ flight, isOpen, onClose }) {
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-8 rounded-lg w-1/3">
         {user ? (
-          // If user is authenticated, show flight details and "Buy Ticket" button
           <>
             <h2 className="text-2xl font-bold mb-4">Flight Information</h2>
             <p><strong>Flight Number:</strong> {flight.flightNumber}</p>
             <p><strong>Departure:</strong> {flight.scheduleDate} - {flight.scheduleTime}</p>
-            <p><strong>Arrival:</strong> {flight.arrivalTime} - {flight.route.destinations[0]}</p>
+            <p><strong>Arrival:</strong> {destinationInfo.city} - {flight.route.destinations[0]}</p>
             <p><strong>Price:</strong> ${flight.price}</p>
             <p><strong>Aircraft:</strong> {flight.aircraftType.iataMain}</p>
             <p><strong>Visa requirement:</strong> {flight.visa ? "Yes" : "No"}</p>

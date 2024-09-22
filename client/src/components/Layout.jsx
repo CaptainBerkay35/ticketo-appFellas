@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import Header from "./Header";
-import SideCards from "./SideCards";
+import SideCards from "./sideCard/SideCards";
 
 export default function Layout() {
   const location = useLocation();
