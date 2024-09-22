@@ -7,6 +7,7 @@ import {
   arrowLeft,
   arrowRight,
 } from "../icon";
+import Modal from "../components/Modal.jsx";
 
 const getRandomPrice = () => {
   return Math.floor(Math.random() * (500 - 50 + 1)) + 50;
@@ -18,6 +19,8 @@ export default function IndexPage() {
   const [error, setError] = useState(null);
   const [tripType, setTripType] = useState("one-way");
   const [expandedFlight, setExpandedFlight] = useState(null);
+  const [selectedFlight, setSelectedFlight] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleFlightDetails = (index) => {
     if (expandedFlight === index) {
@@ -25,6 +28,15 @@ export default function IndexPage() {
     } else {
       setExpandedFlight(index); // Expand the selected flight
     }
+  };
+
+  const openModal = (flight) => {
+    setSelectedFlight(flight); // Seçilen flight bilgilerini kaydet
+    setIsModalOpen(true); // Modalı aç
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Modalı kapat
   };
 
   useEffect(() => {
@@ -203,7 +215,7 @@ export default function IndexPage() {
               </div>
               <div className="flex justify-between items-center font-bold">
                 <p> Price: ${flight.price}</p>
-                <button className="bg-secondary px-12 py-4 text-white rounded-tl-lg rounded-bl-none rounded-tr-none rounded-br-lg absolute right-0 bottom-0 transition duration-200 hover:bg-opacity-80 hover:bg-secondary-light">
+                <button onClick={() => openModal(flight)} className="bg-secondary px-12 py-4 text-white rounded-tl-lg rounded-bl-none rounded-tr-none rounded-br-lg absolute right-0 bottom-0 transition duration-200 hover:bg-opacity-80 hover:bg-secondary-light">
                   Book Flight
                 </button>
               </div>
@@ -243,6 +255,11 @@ export default function IndexPage() {
           <p className="text-gray-600 text-center"> No flights available</p>
         )}
       </ul>
+      <Modal
+          flight={selectedFlight}
+          isOpen={isModalOpen}
+          onClose={closeModal}
+        />
     </div>
   );
 }

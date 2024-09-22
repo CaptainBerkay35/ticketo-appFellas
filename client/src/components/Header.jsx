@@ -18,12 +18,12 @@ export default function Header() {
             <span>Deals</span>
           </a>
         </div>
-        <div>
+        <Link to={"/discover/hotels"}>
           <a href="" className="flex gap-2">
             {DiscoverIcon()}
             <span>Discover</span>
           </a>
-        </div>
+        </Link>
         <Link to={user ? "/account" : "/login"}>
           <a href="" className="flex gap-2">
             {ProfileIcon()}

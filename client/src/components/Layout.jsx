@@ -4,11 +4,13 @@ import SideCards from "./SideCards";
 
 export default function Layout() {
   const location = useLocation();
-  
+
   // List of paths where SideCards should not appear
   const hideSideCardsOnPaths = ["/login", "/register"];
 
-  const shouldHideSideCards = hideSideCardsOnPaths.includes(location.pathname);
+  const shouldHideSideCards =
+    hideSideCardsOnPaths.includes(location.pathname) ||
+    location.pathname.startsWith("/discover");
 
   return (
     <div className="p-4 bg-primary flex flex-col min-h-screen">
@@ -18,7 +20,7 @@ export default function Layout() {
           <Outlet />
         </div>
         {/* Conditionally render SideCards only if not on login or register pages */}
-        {!shouldHideSideCards && <SideCards />} 
+        {!shouldHideSideCards && <SideCards />}
       </div>
     </div>
   );
