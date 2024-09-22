@@ -100,21 +100,23 @@ app.get("/flights", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-app.get("/airlines", async (req, res) => {
+app.get("/destinations/:iata", async (req, res) => {
+  const { iata } = req.params; // Get the IATA code from the URL
   try {
-    const response = await axios.get("https://api.schiphol.nl/public-flights/airlines", {
+    const response = await axios.get(`https://api.schiphol.nl/public-flights/destinations/${iata}`, {
       headers: {
-        "ResourceVersion": "v4",
-        "Accept": "application/json",
-        "app_id": process.env.APP_ID, 
-        "app_key": process.env.SCHIPHOL_API, 
+        ResourceVersion: "v4",
+        Accept: "application/json",
+        app_id: process.env.APP_ID,
+        app_key: process.env.SCHIPHOL_API,
       },
     });
-    res.json(response.data); // Send the API data back to the frontend
+    res.json(response.data); // Send the destination data back to the frontend
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
+
 app.get("/destinations", async (req, res) => {
   try {
     const response = await axios.get("https://api.schiphol.nl/public-flights/destinations", {
