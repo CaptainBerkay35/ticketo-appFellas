@@ -77,6 +77,9 @@ app.get("/profile", (req, res) => {
 
       // Kullanıcıyı bul ve biletlerini populate et
       const userDoc = await User.findById(userData.id).populate('tickets');
+      if (!userDoc) {
+        return res.status(404).json({ error: "User not found" });
+      }
       res.json({
         name: userDoc.name,
         email: userDoc.email,
