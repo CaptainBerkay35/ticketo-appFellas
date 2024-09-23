@@ -1,4 +1,5 @@
 import { PlaneIcon } from "../icon.jsx";
+import { formatDepartureTime } from "../utils.js";
 export default function BookingFlightCard({ ticket, user }) {
   return (
     <div className="relative bg-white p-4 rounded-lg shadow-lg flex  border border-gray-100 mb-8 justify-between items-center ">
@@ -10,18 +11,16 @@ export default function BookingFlightCard({ ticket, user }) {
       </div>
       <div className="w-0.5 h-32 bg-black"></div>
       <div>
-        <li className=" p-4 ">
+        <li className=" p-4 text-start ">
           <p>
-            <strong>Departure Date:</strong> {ticket.departure}
-          </p>
-          <p>
-            <strong>Departure Time:</strong> {ticket.departureTime}
+            <strong>Departure Date:</strong> {ticket.departure} -{" "}
+            {formatDepartureTime(ticket.departureTime)}
           </p>
           <p>
             <strong>Destination:</strong> {ticket.city} - {ticket.destination}
           </p>
           <p>
-            <strong>Price:</strong> ${ticket.price}
+            <strong>Airline:</strong> {ticket.airline}
           </p>
           <p>
             <strong>Purchased by:</strong> {user.name}
@@ -31,10 +30,13 @@ export default function BookingFlightCard({ ticket, user }) {
             {new Date(ticket.purchaseDate).toLocaleDateString()}{" "}
             {new Date(ticket.purchaseDate).toLocaleTimeString()}
           </p>
+          <p>
+            <strong>Price:</strong> ${ticket.price}
+          </p>
         </li>
       </div>
       <div>
-        <li className="p-4">
+        <li className="p-4 text-start">
           <p>
             <strong>Aircraft:</strong> {ticket.aircraft}
           </p>

@@ -2,20 +2,29 @@ import { useContext } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useDestination } from "../contexts/DestinationContext";
+import { useAirline } from "../contexts/AirlineContext.jsx";
+import { formatDepartureTime } from "../utils.js";
 import axios from "axios";
 
 export default function Modal({ flight, isOpen, onClose }) {
   const { user } = useContext(UserContext); // Get user from context
   const { destinations } = useDestination();
+  const { airlines } = useAirline();
+
   const navigate = useNavigate();
 
   const destinationInfo = destinations.find(
     (destination) => destination.iata === flight?.route.destinations[0]
   );
 
+  const airlineInfo = airlines.find(
+    (airline) => airline.iata === flight?.prefixIATA
+  );
+
   const handlePurchase = async () => {
     try {
       const city = destinationInfo.city;
+      const airline = airlineInfo?.publicName || "Unknown Airline";
       const response = await axios.post(
         "http://localhost:4000/purchase",
         {
@@ -24,13 +33,14 @@ export default function Modal({ flight, isOpen, onClose }) {
           destination: flight.route.destinations[0],
           departureTime: flight.scheduleTime,
           city,
+          airline,
           price: flight.price,
-          terminal: flight.terminal, // Add terminal info
-          aircraft: flight.aircraftType.iataMain, // Add aircraft info
-          visa: flight.visa ? "Yes" : "No", // Add visa info
+          terminal: flight.terminal,
+          aircraft: flight.aircraftType.iataMain,
+          visa: flight.visa ? "Yes" : "No",
           baggage: flight.baggageClaim.belts,
         },
-        
+
         { withCredentials: true } // Send cookies for authentication
       );
 
@@ -56,18 +66,21 @@ export default function Modal({ flight, isOpen, onClose }) {
           <>
             <div className="">
               <h2 className="text-2xl font-bold mb-4">Flight Information</h2>
+              <div className="bg-black w-full h-0.5 my-4"></div>
               <p>
                 <strong>Flight Number:</strong> {flight.flightNumber}
               </p>
               <p>
                 <strong>Departure:</strong> {flight.scheduleDate} -{" "}
-                {flight.scheduleTime}
+                {formatDepartureTime(flight.scheduleTime)}
               </p>
               <p>
                 <strong>Arrival:</strong> {destinationInfo.city} -{" "}
                 {flight.route.destinations[0]}
               </p>
-
+              <p>
+                <strong>Airline:</strong> {airlineInfo.publicName}
+              </p>
               <p>
                 <strong>Aircraft:</strong> {flight.aircraftType.iataMain}
               </p>
@@ -77,8 +90,9 @@ export default function Modal({ flight, isOpen, onClose }) {
               <p>
                 <strong>Baggage Claim:</strong> {flight.baggageClaim.belts}
               </p>
-              <div className="">
-                <p>
+              <div className="bg-black w-full h-0.5 my-4"></div>
+              <div className="text-xl">
+                <p className="font-bold">
                   <strong>Price:</strong> ${flight.price}
                 </p>
               </div>

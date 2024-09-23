@@ -42,7 +42,7 @@ export default function AccountPage() {
   }
 
   function linkClasses(type = null) {
-    let classes = "py-2 px-6";
+    let classes = "py-2 px-6 text-lg text-secondary";
     if (type === subpage) {
       classes += " bg-secondary text-white rounded-full";
     }
@@ -55,14 +55,17 @@ export default function AccountPage() {
 
   return (
     <div>
-      <nav className="w-full flex justify-center  my-4 gap-4">
+      <div className="flex justify-center ">
+      <nav className="max-w-fit bg-white flex justify-center rounded-full my-4 gap-4 border-2 border-secondary">
         <Link to={"/account"} className={linkClasses("profile")}>
-          My Profile
+          Profile
         </Link>
         <Link to={"/account/flights"} className={linkClasses("flights")}>
-          My Flights
+          Flights
         </Link>
       </nav>
+      </div>
+     
 
       {subpage === "profile" && (
         <div className="text-center max-w-lg mx-auto">
@@ -78,8 +81,8 @@ export default function AccountPage() {
 
       {subpage === "flights" && (
         <div className="text-center  mx-auto">
-          <h2 className="text-2xl mb-4">My Flights</h2>
-          <p className="mb-4">Tickets are sorted by nearest Departure Time</p>
+          <h2 className="text-2xl mb-4 font-bold">My Flights</h2>
+          <p className="mb-4 text-lg">Tickets are sorted by nearest Departure Time</p>
           {tickets.length > 0 ? (
             <ul>
               {tickets

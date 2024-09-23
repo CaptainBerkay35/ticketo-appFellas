@@ -6,6 +6,7 @@ const ticketSchema = new mongoose.Schema({
   departure: String,
   departureTime: String,
   destination: String,
+  airline:String,
   city:String,
   price: Number,
   purchaseDate: { type: Date, default: Date.now },

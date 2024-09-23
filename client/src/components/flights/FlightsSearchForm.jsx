@@ -63,7 +63,7 @@ export default function FlightSearchForm({
       <div className="flex justify-between gap-4">
         <div className="flex gap-4">
           <div className="flex flex-col">
-            <label htmlFor="departure" className="text-sm text-gray-600">
+            <label htmlFor="departure" >
               From
             </label>
             <select
@@ -76,7 +76,7 @@ export default function FlightSearchForm({
             </select>
           </div>
           <div className="flex flex-col">
-            <label htmlFor="destination" className="text-sm text-gray-600">
+            <label htmlFor="destination" >
               To
             </label>
             <select
@@ -96,7 +96,7 @@ export default function FlightSearchForm({
         </div>
         <div className="flex gap-4">
           <div className="flex flex-col">
-            <label htmlFor="departure-date" className="text-sm text-gray-600">
+            <label htmlFor="departure-date" >
               Departure Date
             </label>
             <input
@@ -107,7 +107,7 @@ export default function FlightSearchForm({
           </div>
           {tripType === "round-trip" && (
             <div className="flex flex-col">
-              <label htmlFor="return-date" className="text-sm text-gray-600">
+              <label htmlFor="return-date" >
                 Return Date
               </label>
               <input

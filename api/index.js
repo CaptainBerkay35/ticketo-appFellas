@@ -109,6 +109,24 @@ app.get("/flights", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+app.get("/airlines/:iata", async (req, res) => {
+  const { iata } = req.params; // Get the IATA code from the URL
+  try {
+    const response = await axios.get(`https://api.schiphol.nl/public-flights/airlines/${iata}`, {
+      headers: {
+        ResourceVersion: "v4",
+        Accept: "application/json",
+        app_id: process.env.APP_ID,
+        app_key: process.env.SCHIPHOL_API,
+      },
+    });
+    res.json({ iata, publicName: response.data.publicName }); // Only send back publicName
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 app.get("/destinations/:iata", async (req, res) => {
   const { iata } = req.params; // Get the IATA code from the URL
   try {
@@ -144,7 +162,7 @@ app.get("/destinations", async (req, res) => {
 
 app.post('/purchase', async (req, res) => {
   const { token } = req.cookies;
-  const { flightNumber, departure, departureTime,destination, price,city ,terminal, aircraft, visa, baggage } = req.body;
+  const { flightNumber, departure, departureTime,destination, price,city ,terminal, aircraft, visa, airline, } = req.body;
 
   if (!token) {
     return res.status(401).json({ error: 'Not authenticated' });
@@ -162,6 +180,7 @@ const baggageString = baggageArray.join(', '); // Convert to a comma-separated s
       departure,
       departureTime,
       destination,
+      airline,
       city,
       price,
       terminal,
