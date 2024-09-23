@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("./models/user.js");
+const Ticket = require("./models/ticket.js");
 const axios = require("axios");
 require("dotenv").config();
 const app = express();
@@ -71,15 +72,23 @@ app.post("/login", async (req, res) => {
 app.get("/profile", (req, res) => {
   const { token } = req.cookies;
   if (token) {
-    jwt.verify(token, jwtSecret, {},async (err, userData) => {
+    jwt.verify(token, jwtSecret, {}, async (err, userData) => {
       if (err) throw err;
-      const {name,email,_id} = await User.findById(userData.id);
-      res.json({name,email,_id});
+
+      // Kullanıcıyı bul ve biletlerini populate et
+      const userDoc = await User.findById(userData.id).populate('tickets');
+      res.json({
+        name: userDoc.name,
+        email: userDoc.email,
+        _id: userDoc._id,
+        tickets: userDoc.tickets // Bilet bilgilerini döndürüyoruz
+      });
     });
   } else {
     res.json(null);
   }
 });
+
 
 app.post('/logout' , (req,res) => {
     res.cookie('token','').json(true);
@@ -133,7 +142,45 @@ app.get("/destinations", async (req, res) => {
   }
 });
 
+app.post('/purchase', async (req, res) => {
+  const { token } = req.cookies;
+  const { flightNumber, departure, departureTime,destination, price,city ,terminal, aircraft, visa, baggage } = req.body;
 
+  if (!token) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
 
+  try {
+    const userData = jwt.verify(token, jwtSecret);
+    const baggageArray = req.body.baggage; // Assuming this is an array
+const baggageString = baggageArray.join(', '); // Convert to a comma-separated string
+
+    // Create a new ticket
+    const ticket = await Ticket.create({
+      user: userData.id,
+      flightNumber,
+      departure,
+      departureTime,
+      destination,
+      city,
+      price,
+      terminal,
+      aircraft,
+      visa,
+      baggage: baggageString,
+      purchaseDate: Date.now(),
+    });
+
+    // Update the user's tickets array
+    await User.findByIdAndUpdate(userData.id, {
+      $push: { tickets: ticket._id }
+    });
+
+    res.json({ success: true, ticket });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to purchase ticket' });
+  }
+});
 
 app.listen(4000);
