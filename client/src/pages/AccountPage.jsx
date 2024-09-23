@@ -1,12 +1,27 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { UserContext } from "../contexts/UserContext";
 import axios from "axios";
+import BookingFlightCard from "../components/BookingFlightCard"; // Import the BookingFlightCard component
 
 export default function AccountPage() {
   const [redirect, setRedirect] = useState(null);
   const { user, ready, setUser } = useContext(UserContext);
+  const [tickets, setTickets] = useState([]); // Biletler için state
   let { subpage } = useParams();
+
+  // "flights" sayfasına gidildiğinde biletleri çek
+  useEffect(() => {
+    if (subpage === "flights") {
+      axios.get("/profile").then(({ data }) => {
+        setTickets(data.tickets); // Biletleri state'e ata
+      });
+    }
+  }, [subpage]);
+
+  const sortedTickets = tickets.sort((a, b) => {
+    return new Date(a.departureTime) - new Date(b.departureTime);
+  });
 
   if (subpage === undefined) {
     subpage = "profile";
@@ -17,7 +32,7 @@ export default function AccountPage() {
   }
 
   if (ready && !user && !redirect) {
-    return <Navigate to={"/login"}></Navigate>;
+    return <Navigate to={"/login"} />;
   }
 
   async function logout() {
@@ -35,12 +50,12 @@ export default function AccountPage() {
   }
 
   if (redirect) {
-    return <Navigate to={redirect}></Navigate>;
+    return <Navigate to={redirect} />;
   }
 
   return (
     <div>
-      <nav className="w-full flex justify-center mt-8 mb-8 gap-4">
+      <nav className="w-full flex justify-center  my-4 gap-4">
         <Link to={"/account"} className={linkClasses("profile")}>
           My Profile
         </Link>
@@ -48,6 +63,7 @@ export default function AccountPage() {
           My Flights
         </Link>
       </nav>
+
       {subpage === "profile" && (
         <div className="text-center max-w-lg mx-auto">
           Logged in as {user.name} ({user.email})<br />
@@ -57,6 +73,30 @@ export default function AccountPage() {
           >
             Logout
           </button>
+        </div>
+      )}
+
+      {subpage === "flights" && (
+        <div className="text-center  mx-auto">
+          <h2 className="text-2xl mb-4">My Flights</h2>
+          <p className="mb-4">Tickets are sorted by nearest Departure Time</p>
+          {tickets.length > 0 ? (
+            <ul>
+              {tickets
+                .sort((a, b) => {
+                  const timeA = a.departureTime.split(':').map(Number);
+                  const timeB = b.departureTime.split(':').map(Number);
+                  const totalSecondsA = timeA[0] * 3600 + timeA[1] * 60 + timeA[2];
+                  const totalSecondsB = timeB[0] * 3600 + timeB[1] * 60 + timeB[2];
+                  return totalSecondsA - totalSecondsB;
+                })
+                .map((ticket) => (
+                  <BookingFlightCard key={ticket._id} ticket={ticket} user={user} />
+                ))}
+            </ul>
+          ) : (
+            <p>You have no booked flights.</p>
+          )}
         </div>
       )}
     </div>
