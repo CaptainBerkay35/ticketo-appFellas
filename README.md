@@ -44,11 +44,13 @@ Now, go to the terminal we opened for the frontend and run:
 yarn dev
 ```
 After this process, we can start using our application.
-
+### Simple Registration Page
 ![Ticketo Uygulaması](./client/src/assets/1.PNG)
-
+### Main Page
+This is the page where you can filter flights by destination and where all flights listed.You can book your flight using this page
 ![Ticketo Uygulaması](./client/src/assets/2.PNG)
-
+### Booking Modal
 ![Ticketo Uygulaması](./client/src/assets/3.PNG)
-
+### Profile Page
+In this page you can easily get you past flights and the tickets you already have.
 ![Ticketo Uygulaması](./client/src/assets/4.PNG)
