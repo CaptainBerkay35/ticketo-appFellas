@@ -10,3 +10,9 @@ Projenizi indirdikten sonra, ana klasörde aşağıdaki adımları izleyin:
 
 ```bash
 yarn install
+```
+Ondan Sonra 2 Yeni terminal oluşturun
+
+```bash
+cd api
+```
