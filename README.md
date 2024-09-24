@@ -45,10 +45,10 @@ yarn dev
 ```
 After this process, we can start using our application.
 
-![Ticketo Uygulaması](./assets/1.PNG)
+![Ticketo Uygulaması](./client/src/assets/1.PNG)
 
-![Ticketo Uygulaması](./assets/2.PNG)
+![Ticketo Uygulaması](./client/src/assets/2.PNG)
 
-![Ticketo Uygulaması](./assets/3.PNG)
+![Ticketo Uygulaması](./client/src/assets/3.PNG)
 
-![Ticketo Uygulaması](./assets/4.PNG)
+![Ticketo Uygulaması](./client/src/assets/4.PNG)
