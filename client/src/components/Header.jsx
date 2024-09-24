@@ -5,9 +5,10 @@ import { DiscoverIcon, DealsIcon, ProfileIcon, HeaderIcon } from "../icon";
 
 export default function Header() {
   const { user } = useContext(UserContext);
+  
   return (
     <header className="flex justify-between mb-4 p-2">
-      <Link to={"/"} href="" className="flex items-center gap-1">
+      <Link to={"/"} className="flex items-center gap-1">
         {HeaderIcon()}
         <span className="font-bold text-xl">Ticketo</span>
       </Link>
@@ -24,10 +25,16 @@ export default function Header() {
             <span>Discover</span>
           </a>
         </Link>
-        <Link to={user ? "/account" : "/login"}>
+        <Link to={user ? "/account" : "/register"}>
           <a href="" className="flex gap-2">
             {ProfileIcon()}
-            {!!user && <div>{user.name}</div>}
+            {!!user ? (
+              <div>{user.name}</div>
+            ) : (
+              <div className="flex gap-2">
+                <span className="cursor-pointer">Login/Register</span>
+              </div>
+            )}
           </a>
         </Link>
       </div>

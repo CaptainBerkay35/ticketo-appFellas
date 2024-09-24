@@ -6,23 +6,27 @@ import { UserContext } from "../contexts/UserContext";
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [redirect,setRedirect] = useState(false);
-  const {setUser} = useContext(UserContext)
+  const [redirect, setRedirect] = useState(false);
+  const [loading, setLoading] = useState(false); 
+  const { setUser } = useContext(UserContext);
 
   async function handleLoginSubmit(event) {
     event.preventDefault();
+    setLoading(true); 
     try {
-      const response = await axios.post('/login', { email, password });
+      const response = await axios.post("/login", { email, password });
       setUser(response.data);
-      alert("Login Succesfull");
       setRedirect(true);
     } catch (e) {
+      console.error(e);
       alert("Login failed");
+    } finally {
+      setLoading(false); 
     }
   }
 
-  if(redirect){
-    return <Navigate to={'/'}></Navigate>
+  if (redirect) {
+    return <Navigate to={"/"} />;
   }
 
   return (
@@ -44,9 +48,13 @@ export default function LoginPage() {
             onChange={(event) => setPassword(event.target.value)}
             className="w-full border my-2 py-2 px-3 rounded-2xl"
           />
-          <button className="my-2 py-2 px-3 border rounded-2xl bg-secondary w-full text-white">
-            Login
+          <button
+            className="my-2 py-2 px-3 border rounded-2xl bg-secondary w-full text-white text-lg hover:bg-secondary_light transition duration-200"
+            disabled={loading} 
+          >
+            {loading ? "Loading..." : "Login"}
           </button>
+
           <div className="text-center py-2 text-gray-500">
             Don't have an account yet?{" "}
             <Link className="underline text-black font-bold" to={"/register"}>

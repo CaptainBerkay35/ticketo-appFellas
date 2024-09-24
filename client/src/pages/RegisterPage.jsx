@@ -1,29 +1,39 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); 
+  const [redirect, setRedirect] = useState(false);
 
   async function registerUser(event) {
     event.preventDefault();
+    setLoading(true); 
     try {
       await axios.post("/register", {
         name,
         email,
         password,
       });
-      alert("Registration succesfull.Now you can log in");
+      setRedirect(true); 
     } catch (e) {
-      alert("Registration failed try again later");
+      console.error(e);
+      alert("Registration failed, try again later.");
+    } finally {
+      setLoading(false); 
     }
   }
 
+  if (redirect) {
+    return <Navigate to={"/login"} />; // Redirect to login page
+  }
+
   return (
-    <div className="mt-4 grow flex items-center justify-around">
-      <div className="mb-32">
+    <div className="mt-4 grow flex flex-col items-center justify-around gap-4">
+      <div>
         <h1 className="text-4xl text-center mb-4 font-bold">Register</h1>
         <form className="max-w-md mx-auto" onSubmit={registerUser}>
           <input
@@ -47,8 +57,11 @@ export default function RegisterPage() {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
           />
-          <button className="my-2 py-2 px-3 border rounded-2xl bg-secondary w-full text-white">
-            Register
+          <button
+            className="my-2 py-2 px-3 border rounded-2xl bg-secondary w-full text-white hover:bg-secondary_light transition duration-200"
+            disabled={loading} // Disable button while loading
+          >
+            {loading ? "Loading..." : "Register"} {/* Show loading text */}
           </button>
           <div className="text-center py-2 text-gray-500">
             Already a member?{" "}

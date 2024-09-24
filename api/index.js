@@ -30,8 +30,6 @@ mongoose
     console.error("MongoDB connection error: ", err);
   });
 
-//vwQdb1Z5NYSB9unr
-
 app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
   try {
@@ -124,6 +122,9 @@ app.get("/airlines/:iata", async (req, res) => {
         app_key: process.env.SCHIPHOL_API,
       },
     });
+    if (!response.data || !response.data.publicName) {
+      return res.status(404).json({ error: "Airline data not found for this IATA code." });
+    }
     res.json({ iata, publicName: response.data.publicName }); // Only send back publicName
   } catch (error) {
     res.status(500).json({ error: error.message });

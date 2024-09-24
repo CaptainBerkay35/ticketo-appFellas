@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import { Link, useNavigate } from "react-router-dom";
 import { useDestination } from "../contexts/DestinationContext";
@@ -10,7 +10,6 @@ export default function Modal({ flight, isOpen, onClose }) {
   const { user } = useContext(UserContext); // Get user from context
   const { destinations } = useDestination();
   const { airlines } = useAirline();
-
   const navigate = useNavigate();
 
   const destinationInfo = destinations.find(
@@ -20,6 +19,8 @@ export default function Modal({ flight, isOpen, onClose }) {
   const airlineInfo = airlines.find(
     (airline) => airline.iata === flight?.prefixIATA
   );
+
+  const [confirmationMessage, setConfirmationMessage] = useState("");
 
   const handlePurchase = async () => {
     try {
@@ -40,14 +41,16 @@ export default function Modal({ flight, isOpen, onClose }) {
           visa: flight.visa ? "Yes" : "No",
           baggage: flight.baggageClaim.belts,
         },
-
         { withCredentials: true } // Send cookies for authentication
       );
 
       if (response.data.success) {
-        alert("Ticket purchased successfully!");
-        navigate("/account/flights");
-        onClose(); // Close modal after successful purchase
+        setConfirmationMessage("Ticket purchased successfully!");
+        // Delay navigation for 1 second
+        setTimeout(() => {
+          navigate("/account/flights");
+          onClose(); // Close modal after navigation
+        }, 1000);
       } else {
         alert("Failed to purchase ticket");
       }
@@ -79,7 +82,7 @@ export default function Modal({ flight, isOpen, onClose }) {
                 {flight.route.destinations[0]}
               </p>
               <p>
-                <strong>Airline:</strong> {airlineInfo.publicName}
+                <strong>Airline:</strong> {airlineInfo?.publicName}
               </p>
               <p>
                 <strong>Aircraft:</strong> {flight.aircraftType.iataMain}
@@ -112,6 +115,13 @@ export default function Modal({ flight, isOpen, onClose }) {
                 Close
               </button>
             </div>
+
+            {/* Display confirmation message if available */}
+            {confirmationMessage && (
+              <div className="mt-4 text-green-600 text-center">
+                {confirmationMessage}
+              </div>
+            )}
           </>
         ) : (
           <>

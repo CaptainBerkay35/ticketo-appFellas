@@ -12,6 +12,7 @@ import {
 } from "../../utils.js";
 import { useDestination } from "../../contexts/DestinationContext.jsx";
 import { useAirline } from "../../contexts/AirlineContext.jsx";
+import { useState } from "react";
 
 export default function FlightCard({
   flight,
@@ -30,7 +31,7 @@ export default function FlightCard({
     (airline) => airline.iata === flight.prefixIATA
   );
 
-  
+  const [hovered, setHovered] = useState(false);
 
   return (
     <div
@@ -52,8 +53,8 @@ export default function FlightCard({
             {DepartureIcon()}Departure
           </div>
           <div>
-            <p className="  font-bold">{flight.scheduleDate}</p>
-            <p className="  font-bold">
+            <p className="font-bold">{flight.scheduleDate}</p>
+            <p className="font-bold">
               Departure: {formatDepartureTime(flight.scheduleTime)}
             </p>
           </div>
@@ -63,7 +64,13 @@ export default function FlightCard({
           <div className="font-bold text-lg">
             {airlineInfo ? airlineInfo.publicName : "Unknown Airline"}
           </div>
-          <div>{PlaneIcon()}</div>
+          <div
+            className={`transition-transform duration-300 transform ${
+              hovered ? "translate-x-[20px]" : ""
+            }`}
+          >
+            {PlaneIcon()}
+          </div>
           <p className="text-lg text-black font-bold">
             Duration:{" "}
             {calculateDuration(
@@ -76,9 +83,7 @@ export default function FlightCard({
         <div className="flex flex-col">
           <div className="gap-2 flex font-bold">{ArrivalIcon()}Arrival</div>
           <div>
-            <p className=" font-bold">
-              Airport: {flight.route.destinations[0]}
-            </p>
+            <p className="font-bold">Airport: {flight.route.destinations[0]}</p>
             <p className="font-bold">
               Estimated Arrival: {formatTime(flight.expectedTimeOnBelt)}
             </p>
@@ -88,8 +93,10 @@ export default function FlightCard({
       <div className="flex justify-between items-center font-bold">
         <p className="text-lg">Price: ${flight.price}</p>
         <button
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
           onClick={() => openModal(flight)}
-          className="bg-secondary px-12 py-4 text-white rounded-tl-lg rounded-bl-none rounded-tr-none rounded-br-lg absolute right-0 bottom-0 transition duration-200 hover:bg-opacity-80 hover:bg-secondary-light"
+          className="bg-secondary px-12 py-4 text-white rounded-tl-lg rounded-bl-none rounded-tr-none rounded-br-lg absolute right-0 bottom-0 transition duration-200 hover:bg-secondary_light"
         >
           Book Flight
         </button>
@@ -101,9 +108,9 @@ export default function FlightCard({
       >
         <button
           onClick={() => toggleFlightDetails(index)}
-          className={`py-2 px-4 border rounded-md bg-gray-300 text-md text-secondary underline w-full flex items-center gap-2 ${
+          className={`py-2 px-4 border rounded-md bg-gray-300 text-md text-secondary underline w-full flex items-center gap-2 hover:bg-gray-400 ${
             expandedFlight === index
-              ? "bg-secondary text-white rounded-tl-none rounded-tr-none no-underline"
+              ? "bg-secondary text-white rounded-tl-none rounded-tr-none no-underline hover:bg-secondary_light"
               : ""
           }`}
         >
