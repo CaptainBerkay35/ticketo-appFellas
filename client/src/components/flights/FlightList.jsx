@@ -21,8 +21,6 @@ export default function FlightList({
     setExpandedFlight(expandedFlight === index ? null : index);
   };
 
-  // If showFlights is true and a destination is selected, filter flights by destination
-  // Otherwise, show all flights
   const filteredFlights =
     showFlights && selectedDestination
       ? flights.filter((flight) =>
@@ -62,16 +60,25 @@ export default function FlightList({
         const airlineRequests = airlineCodes.map((iatacode) =>
           axios.get(`/airlines/${iatacode}`)
         );
-
         try {
-          const airlineResponses = await Promise.all(airlineRequests);
-          const airlineData = airlineResponses.map((res) => res.data);
+          // Tüm havayolu isteklerini aynı anda başlatıyoruz
+          const airlineResponses = await Promise.allSettled(airlineRequests);
+
+          // Başarılı olan istekleri filtreliyoruz
+          const successfulAirlines = airlineResponses
+            .filter((result) => result.status === "fulfilled") // Başarılı istekleri al
+            .map((result) => result.value.data) // Yanıtın verisini çek
+            .filter((data) => data && data.publicName); // publicName olmayanları da çıkar
+
+          // Tekrarlayan havayolu verilerini temizle
           const uniqueAirlineData = Array.from(
-            new Set(airlineData.map((a) => a.iata))
-          ).map((iata) => airlineData.find((a) => a.iata === iata));
-          setAirlines(uniqueAirlineData); // airline bilgilerini state'e kaydet
+            new Set(successfulAirlines.map((a) => a.iata))
+          ).map((iata) => successfulAirlines.find((a) => a.iata === iata));
+
+          setAirlines(uniqueAirlineData); // Havayolu bilgilerini state'e kaydet
         } catch (err) {
-          console.error("Error fetching airline data:", err);
+          console.error("Error fetching airline data:", err.message);
+          setError("Error fetching airline data. Please try again later.");
         }
       })
       .catch((error) => setError(error.message));
