@@ -85,7 +85,7 @@ export default function FlightList({
   }, []);
 
   return (
-    <div>
+    <div className="max-w-full overflow-x-auto">
       {error && <p>Error: {error}</p>}
       <ul>
         {filteredFlights.length > 0 ? (

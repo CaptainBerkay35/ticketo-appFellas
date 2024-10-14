@@ -2,7 +2,7 @@ import { PlaneIcon } from "../icon.jsx";
 import { formatDepartureTime } from "../utils.js";
 export default function BookingFlightCard({ ticket, user }) {
   return (
-    <div className="relative bg-white p-4 rounded-lg shadow-lg flex  border border-gray-100 mb-8 justify-between items-center ">
+    <div className="relative bg-white p-4 rounded-lg shadow-lg flex  border border-gray-100 mb-4 sm:mb-8 justify-between items-center ">
       <div className="flex justify-between items-center gap-4">
         <h2 className="text-2xl">
           <strong>Flight Number:</strong> {ticket.flightNumber}
