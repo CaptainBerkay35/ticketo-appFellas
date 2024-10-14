@@ -34,7 +34,7 @@ export default function FlightSearchForm({
   }, []);
 
   return (
-    <div className="w-full bg-white rounded-lg p-4 flex flex-col gap-4 mb-8">
+    <div className="w-full bg-white rounded-lg p-4 flex flex-col gap-4 mb-8 max-w-xl sm:max-w-3xl mx-auto md:max-w-4xl lg:max-w-5xl">
       <div className="flex justify-between">
         <div className="flex text-center gap-4">
           {PlaneIcon()}
@@ -60,8 +60,8 @@ export default function FlightSearchForm({
         </div>
       </div>
 
-      <div className="flex justify-between gap-4">
-        <div className="flex gap-4">
+      <div className=" flex flex-col sm:flex-row justify-between gap-4">
+        <div className="sm:flex gap-4">
           <div className="flex flex-col">
             <label htmlFor="departure" >
               From
@@ -94,7 +94,7 @@ export default function FlightSearchForm({
             </select>
           </div>
         </div>
-        <div className="flex gap-4">
+        <div className=" sm:flex gap-4">
           <div className="flex flex-col">
             <label htmlFor="departure-date" >
               Departure Date

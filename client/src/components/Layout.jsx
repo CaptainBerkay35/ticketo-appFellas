@@ -13,14 +13,13 @@ export default function Layout() {
     location.pathname.startsWith("/discover");
 
   return (
-    <div className="p-4 bg-primary flex flex-col min-h-screen">
+    <div className="p-4 bg-primary flex flex-col min-h-screen min-w-fit">
       <Header />
       <div className="flex">
         <div className="flex-1">
           <Outlet />
         </div>
-        {/* Conditionally render SideCards only if not on login or register pages */}
-        {!shouldHideSideCards && <SideCards />}
+        {!shouldHideSideCards && <SideCards  />}
       </div>
     </div>
   );
